@@ -1,0 +1,44 @@
+---
+title: "EWS Hausaufgabe 9.1"
+output: html_document
+---
+
+
+```{r}
+library(ggplot2)
+set.seed(3)
+rchi <- c(rchisq(100,5),rchisq(100,10),rchisq(100,50))
+x <- c(rep("5", 100),rep("10",100),rep("50",100))
+df_rchi <- data.frame(rchi,x)
+ggplot(df_rchi, aes(sample=rchi, colour=factor(x)))+
+  stat_qq()+stat_qq_line()
+```
+
+\par
+Beobachtung:
+\par
+- Der Erwatungswert der Distribution verschiebt sich entsprechend der Freiheitsgrade.
+\par
+- Dadurch, dass die Mehrheit der Werte sich über der Referenzgeraden, bzgl. der Normaldistribution, befinden lässt sich eine positive Schiefe der Distributionen ausmachen. Es scheint jedoch auch, dass die Schiefe mit zunehmendem Freiheitsgrad abnimmt.
+
+
+```{r}
+set.seed(3)
+rchi <- c(rt(100,2),rt(100,5),rt(100,20),rnorm(100))
+x<-c(rep("2", 100),rep("5",100),rep("20",100),rep("inf",100))
+df_rchi <- data.frame(rchi,x)
+ggplot(df_rchi, aes(sample=rchi, colour=factor(x)))+
+  stat_qq()+stat_qq_line()
+```
+
+\par
+Beobachtung:
+\par
+- Der Erwartungswert der Distribution verschiebt sich nicht entsprechend der Freiheitsgrade.
+\par
+- Dadurch, dass die Mehrheit der Werte sich links unter und rechts über der Referenzgeraden, bzgl. der Normaldistribution, befinden lässt sich auf schwere Ränder schließen, deren Schwere sich antiproportional zu den Freiheitsgraden verhält.
+
+
+
+
+
