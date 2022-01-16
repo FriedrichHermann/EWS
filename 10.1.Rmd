@@ -20,13 +20,20 @@ df <- melt(df, id.vars="x", variable.name="N")
 library(ggplot2)
 ggplot(df,aes(x, value)) + geom_line(aes(colour=N))
 ```
+\par
+Beobachtung:
+\par
+- MSE wird höher je weiter der echte Parameter an 0,5 dran ist
+\par
+- MSE wird generell kleiner je höher n ist
+\par
 #T2 Schätzer
 ```{r}
 x <- seq(0.1,0.9,0.1)
 n <- c(10,60,100)
-MSE_T2_10 <- (-n[1]*(x^2+x+n[1]+2)+4*x)/((n[1]+2)^2)
-MSE_T2_60 <- (-n[2]*(x^2+x+n[2]+2)+4*x)/((n[2]+2)^2)
-MSE_T2_100 <- (-n[3]*(x^2+x+n[3]+2)+4*x)/((n[3]+2)^2)
+MSE_T2_10 <- (1+(n[1]-4)*x+(4-n[1])*x^2)/((n[1]+2)^2)
+MSE_T2_60 <- (1+(n[2]-4)*x+(4-n[2])*x^2)/((n[2]+2)^2)
+MSE_T2_100 <- (1+(n[3]-4)*x+(4-n[3])*x^2)/((n[3]+2)^2)
 df_2 <- data.frame(x,MSE_T2_10,MSE_T2_60,MSE_T2_100)
 df_2 <- melt(df_2, id.vars="x", variable.name="N")
 ```
@@ -34,17 +41,13 @@ df_2 <- melt(df_2, id.vars="x", variable.name="N")
 library(ggplot2)
 ggplot(df_2,aes(x, value)) + geom_line(aes(colour=N))
 ```
-# braucht man glaub ich nicht:
-```{r}
-binomial<-function(x,n){
-  A<-matrix(0,n,length(x))
-  for (i in 1:length(x)){
-    A[,i]=rbinom(n,1,x[i])
-  }
-A<-data.frame(A)
-colnames(A) <- x
-return(A)
-}
-binomial(x,10)
-```
+
+\par
+Beobachtung:
+\par
+- MSE wird kleiner je näher der echte Parameter an 0,0 oder 1,0 dran ist
+\par
+- MSE von T2 ist für kleine n niedriger als T1. Für große n gibt es keine Unterschiede
+\par
+-> T2 eignet sich besser als T1 trotz der Verzerrung des Schätzers
 
