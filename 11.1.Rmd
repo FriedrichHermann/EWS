@@ -1,19 +1,53 @@
 ---
-title: '11.1'
+title: '11'
 output: html_document
 ---
-
+# Aufgabe 10.1
 ```{r}
 library(ggplot2)
 library(gridExtra)
 set.seed(1)
 variables <- data.frame(steps=1:1000,dist=rnorm(1000))
-head(variables)
-
 df50<-ggplot(variables[1:50,], aes(x=dist[1:50])) + stat_ecdf() + stat_function(fun=pnorm, colour="red") + xlab("Wert der Zufallsvariablen") + ylab("kumulative Wahrscheinlichkeit") + labs(title="50 Zufallsvariablen")
 df100<-ggplot(variables[1:100,], aes(x=dist[1:100])) + stat_ecdf() + stat_function(fun=pnorm, colour="red") + xlab("") + ylab("")+ labs(title="100 Zufallsvariablen")
 df500<-ggplot(variables[1:500,], aes(x=dist[1:500])) + stat_ecdf() + stat_function(fun=pnorm, colour="red") + xlab("") + ylab("")+ labs(title="500 Zufallsvariablen")
 df1000<-ggplot(variables, aes(x=dist)) + stat_ecdf() + stat_function(fun=pnorm, colour="red") + xlab("") + ylab("")+ labs(title="1000 Zufallsvariablen")
 grid.arrange(df50,df100,df500,df1000, ncol=2)
 ```
+
+\p
+# Aufgabe 10.3
+```{r}
+
+set.seed(1)
+data <- rpois(100,lambda=3)
+log_likelihood <- dpois(data, lambda = seq(0.1,10,0.1), log=TRUE)
+df <- data.frame(sequ=seq(0.1,10,0.1),log_likelihood)
+ggplot(df, aes(x=sequ, y=log_likelihood)) + geom_line() + geom_vline(xintercept =3, color="red") + geom_vline(xintercept =1, color="blue") 
+
+
+```
+
+\p
+Rot: Echter Parameter 
+\p
+Blau: Geschätzter Parameter
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
