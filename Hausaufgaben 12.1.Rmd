@@ -1,0 +1,99 @@
+---
+title: "Übungen 25.01.22"
+output: html_document
+---
+
+# Teilaufgabe a)
+
+
+```{r}
+library(tidyverse)
+data <- read.csv("/Users/klaus/Downloads/Umfrage-Gewicht-Groesse.csv")
+head(data)
+ggplot(data, aes(x=Groesse , y=Gewicht)) + xlim(145, 185) + ylim(50,77) + geom_point()
+```
+\p
+Beobachtungen:
+\p
+- Es ist ein annähernd positiv linearer Zusammenhang zwischen den Variablen Größe und Gewicht zu erkennen
+
+# Teilaufgabe b)
+
+```{r}
+emp.Mittelwert <- function(x){
+  z=sum(x)/length(x)
+  return(z)
+}
+emp.Varianz <- function(x){
+  sum((x-emp.Mittelwert(x))^2)/(length(x)-1)
+}
+
+emp.Kovarianz <- function(x,y){
+  z=0
+  for (i in 1:length(x)){
+      z=z+((x[i]-emp.Mittelwert(x))*(y[i]-emp.Mittelwert(y)))
+  }
+  return(z/(length(x)-1))
+}
+emp.Korrelation <- function(x,y){
+  cor = emp.Kovarianz(x,y)/sqrt(emp.Varianz(x)*emp.Varianz(y))
+  return(cor)
+}
+
+
+emp.Korrelation(data$Groesse,data$Gewicht)
+```
+
+# Teilaufabe c)
+
+```{r}
+alpha <- function(x,y){
+  return(emp.Mittelwert(y)-emp.Mittelwert(x)*(emp.Kovarianz(x,y)/emp.Varianz(x)))
+}
+
+beta <- function(x,y){
+  return(emp.Kovarianz(x,y)/emp.Varianz(x))
+}
+
+a <- alpha(data$Groesse, data$Gewicht)
+b <- beta(data$Groesse, data$Gewicht)
+```
+
+```{r}
+linear.model <- function(x,y){
+  z = alpha(x,y) + beta(x,y)*x
+  return(z)
+}
+y.hut = linear.model(data$Groesse, data$Gewicht)
+
+R <- (emp.Kovarianz(y.hut,data$Gewicht)/sqrt(emp.Varianz(y.hut)*emp.Varianz(data$Gewicht)))^2
+R
+```
+
+\p
+- ein R-squared beschreibt wie gut die Variation der Ausgangsvariable durch die Eingangsvariablen beschrieben werden können. In diesem Fall sind das ~83% welches auf ein gutes Model hindeutet
+
+```{r}
+library(tidyverse)
+data <- read.csv("/Users/klaus/Downloads/Umfrage-Gewicht-Groesse.csv")
+head(data)
+ggplot(data, aes(x=Groesse , y=Gewicht)) + xlim(145, 185) + ylim(50,77) + geom_point() + geom_smooth(method = 'lm', se=FALSE)
+```
+```{r}
+a+b*175
+```
+
+```{r}
+data.1<-dplyr::add_row(data, Groesse=c(175,150), Gewicht=c(55,75))
+summary(data.1)
+newcommers <- data.1[21:22,]
+newcommers
+ggplot(data.1, aes(x=Groesse , y=Gewicht)) + xlim(145, 185) + ylim(50,77) + geom_point() + geom_point(data=newcommers, aes(color="red")
+```
+```{r}
+y.hut.2 = linear.model(data.1$Groesse, data.1$Gewicht)
+
+R <- (emp.Kovarianz(y.hut.2,data.1$Gewicht)/sqrt(emp.Varianz(y.hut.2)*emp.Varianz(data.1$Gewicht)))^2
+R
+```
+
